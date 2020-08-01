@@ -12,10 +12,10 @@ import (
 )
 
 func main() {
-	lambda.Start(handleRequest)
+	lambda.Start(Handler)
 }
 
-func handleRequest() {
+func Handler() {
 	accessToken, ok := os.LookupEnv("STACK_EXCHANGE_ACCESS_TOKEN")
 	if !ok {
 		log.Fatalf("STACK_EXCHANGE_ACCESS_TOKEN env variable is not set")

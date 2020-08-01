@@ -1,13 +1,6 @@
-PROJECT_NAME := "stackoverflow-heroes"
-PKG := "github.com/otanikotani/$(PROJECT_NAME)"
-GO_FILES := $(shell find . -name '*.go' | grep -v /vendor/ | grep -v _test.go)
-
 .PHONY: all
 
 all: build
-
-zip: clean.zip build
-	zip -j ${PROJECT_NAME}.zip build/*
 
 tidy: dep
 	@go mod tidy
@@ -16,18 +9,26 @@ dep: ## Get the dependencies
 	@go mod download
 
 lint: ## Lint Golang files
-	@golint .
+	@golint ./...
 
 test: ## Run unittests
-	@go test .
+	@go test ./...
 
-build: tidy ## Build the binary file
-	@go build -i -o build/${PROJECT_NAME} $(PKG)
+.PHONY: build clean deploy
 
-clean.zip:
-	@rm -rf build/
-	rm ${PROJECT_NAME}.zip || true
+build: build_fetch
+
+build_fetch:
+	env GOOS=linux go build -ldflags="-s -w" -o build/fetch $(shell find fetch/ -name '*.go' | grep -v _test.go)
+
+zip: build fetch_zip
+
+fetch_zip: build_fetch
+	zip -j -r9 build/fetch.zip build/fetch
 
 clean:
 	@rm -rf build/
-	rm ${PROJECT_NAME}.zip || true
+
+deploy: clean build zip
+	terraform apply -auto-approve
+
