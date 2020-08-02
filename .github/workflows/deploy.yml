@@ -28,15 +28,19 @@ jobs:
       - name: Run tests and build
         run: make test build
 
-  release:
-    name: Semantic release
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     needs: verify
     steps:
       - name: Test AWS Secrets are set
         run: |
-          if [ -n "$AWS_ACCESS_KEY_ID" ] || [ -n "$AWS_SECRET_ACCESS_KEY" ]; then
-            echo "Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in repo secrets"
+          if [ -n "$AWS_ACCESS_KEY_ID" ]; then
+            echo "Set AWS_ACCESS_KEY_ID in repo secrets"
+            exit 1
+          fi
+          if [ -n "$AWS_SECRET_ACCESS_KEY"]; then
+            eecho "Set AWS_SECRET_ACCESS_KEY in repo secrets"
             exit 1
           fi
         env:

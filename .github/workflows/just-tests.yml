@@ -3,7 +3,7 @@ name: Just Tests
 on:
   push:
     branches:
-      - master
+      - ^master
     tags: []
   pull_request:
 
