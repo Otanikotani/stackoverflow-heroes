@@ -13,6 +13,4 @@ provider "aws" {
 
 module "fetch" {
   source = "./fetch"
-  stack_exchange_access_token = "SET-FROM-ENV"
-  stack_exchange_key = "SET-FROM-ENV"
 }
