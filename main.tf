@@ -13,4 +13,6 @@ provider "aws" {
 
 module "fetch" {
   source = "./fetch"
+  stack_exchange_access_token = var.stack_exchange_access_token
+  stack_exchange_key = var.stack_exchange_key
 }
